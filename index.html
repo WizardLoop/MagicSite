@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>PHPWIZ - Master of PHP spells</title>
+  <link href="https://fonts.googleapis.com/css?family=Orbitron:700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      font-family: 'Orbitron', Arial, sans-serif;
+      background: transparent;
+      color: #fff;
+      transition: background 0.5s, color 0.5s;
+    }
+    body {
+      background: linear-gradient(135deg, #3a0ca3 0%, #7209b7 50%, #4361ee 100%);
+      position: relative;
+      min-height: 100vh;
+      transition: background 0.5s;
+    }
+    body.night {
+      background: linear-gradient(135deg, #240046 0%, #5f0a87 100%);
+      color: #fff;
+    }
+    body.day {
+      background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+      color: #222;
+    }
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .card-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      z-index: 1;
+      position: relative;
+    }
+    .profile-card {
+      background: linear-gradient(180deg, #7209b7 0 50%, #3a0ca3 50% 100%);
+      color: #fff;
+      border-radius: 18px;
+      box-shadow: 0 0 32px #00f0ff66, 0 0 0 6px #f7258544;
+      max-width: 290px;
+      width: 100%;
+      min-height: 320px;
+      padding: 0 0 1.5rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin: 0 8px;
+      transition: background 0.5s, color 0.5s, box-shadow 0.5s;
+    }
+    body.day .profile-card {
+      background: linear-gradient(180deg, #f8fafc 0 50%, #fff 50% 100%);
+      color: #222;
+      box-shadow: 0 0 32px #8f00ff22;
+    }
+    .profile-card .card-header {
+      background: transparent;
+      padding: 1.5rem 0 0.7rem 0;
+      border-radius: 0 0 40% 40%/0 0 80% 80%;
+      position: relative;
+    }
+    .profile-card .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 4px #f72585, 0 0 16px #00f0ff;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+      background: #fff;
+      transition: box-shadow 0.3s;
+    }
+    .profile-card .name {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 0.15rem;
+      letter-spacing: 0.08em;
+      color: #f72585;
+      text-shadow: 0 0 8px #7209b755;
+    }
+    .profile-card .username {
+      font-size: 0.98rem;
+      color: #fff8;
+      margin-bottom: 0.7rem;
+      font-style: italic;
+    }
+    .profile-card .about-section {
+      margin: 0 0.7rem 0.7rem 0.7rem;
+      padding: 0.7rem 0 0.3rem 0;
+      border-top: 1px solid #fff2;
+      font-size: 0.98rem;
+      color: #e0e0ff;
+      text-shadow: 0 0 8px #3a0ca355;
+    }
+    body.day .profile-card .about-section {
+      color: #444;
+      text-shadow: none;
+      border-top: 1px solid #ccc;
+    }
+    .profile-card .skills {
+      margin: 0.5rem 0 0.7rem 0;
+      font-size: 0.95rem;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+    body.day .profile-card .skills {
+      color: #8f00ff;
+    }
+    .profile-card .skills span {
+      background: linear-gradient(90deg, #00f0ff 0%, #f72585 100%);
+      color: #fff;
+      border-radius: 8px;
+      padding: 2px 8px;
+      margin: 0 2px;
+      font-weight: 600;
+      box-shadow: 0 0 8px #00f0ff44;
+      font-size: 0.93rem;
+      display: inline-block;
+    }
+    .profile-card .socials {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+      margin-top: 0.3rem;
+    }
+    .profile-card .socials a {
+      color: #fff;
+      background: linear-gradient(135deg, #00f0ff 0%, #f72585 100%);
+      border-radius: 12px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+      box-shadow: 0 0 8px #00f0ff44;
+      text-decoration: none;
+      border: 2px solid #fff2;
+    }
+    .profile-card .socials a:hover {
+      background: linear-gradient(135deg, #f72585 0%, #00f0ff 100%);
+      color: #fff;
+      box-shadow: 0 0 16px #f7258599;
+      transform: scale(1.12) rotate(-6deg);
+      border: 2px solid #fff;
+    }
+    .profile-card .actions {
+      display: flex;
+      justify-content: center;
+      gap: 0.7rem;
+      margin-top: 0.7rem;
+    }
+    .profile-card .action-btn {
+      background: linear-gradient(90deg, #00f0ff 0%, #f72585 100%);
+      border: none;
+      color: #fff;
+      border-radius: 18px;
+      padding: 0.5rem 1.1rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+      outline: none;
+      text-decoration: none;
+      box-shadow: 0 0 8px #00f0ff44;
+      letter-spacing: 0.03em;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-card .action-btn.follow {
+      background: linear-gradient(90deg, #f72585 0%, #00f0ff 100%);
+      color: #fff;
+      border: none;
+    }
+    .profile-card .action-btn:hover, .profile-card .action-btn:focus {
+      background: linear-gradient(90deg, #7209b7 0%, #00f0ff 100%);
+      color: #fff;
+      box-shadow: 0 0 16px #f7258599;
+      transform: scale(1.07);
+    }
+    /* Day/Night Toggle */
+    .toggle-switch {
+      position: fixed;
+      top: 22px;
+      left: 22px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(30,30,40,0.7);
+      border-radius: 20px;
+      padding: 0.2rem 0.7rem 0.2rem 0.4rem;
+      box-shadow: 0 0 12px #00f0ff44;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s;
+    }
+    body.day .toggle-switch {
+      background: #e0e7ef;
+      box-shadow: 0 0 12px #8f00ff22;
+    }
+    .toggle-switch i {
+      font-size: 1.3rem;
+      color: #ff2e63;
+      transition: color 0.3s;
+    }
+    body.day .toggle-switch i {
+      color: #8f00ff;
+    }
+    .toggle-switch span {
+      font-size: 1.01rem;
+      color: #fff;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    body.day .toggle-switch span {
+      color: #8f00ff;
+    }
+    @media (max-width: 600px) {
+      .card-container {
+        min-height: 90vh;
+      }
+      .profile-card {
+        max-width: 96vw;
+        min-height: 240px;
+        padding: 0 0 0.7rem 0;
+        border-radius: 14px;
+      }
+      .profile-card .card-header {
+        padding: 0.7rem 0 0.4rem 0;
+      }
+      .profile-card .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+      }
+      .profile-card .name {
+        font-size: 1.05rem;
+      }
+      .profile-card .about-section {
+        font-size: 0.91rem;
+        margin: 0 0.3rem 0.5rem 0.3rem;
+      }
+      .profile-card .skills span {
+        font-size: 0.85rem;
+        padding: 1px 6px;
+      }
+      .profile-card .action-btn {
+        font-size: 0.93rem;
+        padding: 0.4rem 0.7rem;
+        border-radius: 12px;
+      }
+      .profile-card .socials a {
+        width: 26px;
+        height: 26px;
+        font-size: 0.98rem;
+        border-radius: 8px;
+      }
+    }
+  </style>
+</head>
+<body class="night" oncontextmenu="return false;">
+  <div class="toggle-switch" id="toggleMode" title="Switch day/night mode">
+    <i class="fa-solid fa-moon"></i>
+    <span>Night</span>
+  </div>
+  <canvas id="bg-canvas"></canvas>
+  <div class="card-container">
+    <div class="profile-card">
+      <div class="card-header">
+        <img src="wizard.png" alt="Wizard Avatar" class="avatar" />
+        <div class="name">PHPWIZ</div>
+        <div class="username">@phpwiz</div>
+      </div>
+      <div class="about-section">
+        Backend Developer<br>
+        I conjure up magical web solutions using PHP, JavaScript, and more.<br>
+        My code blends creativity and technical wizardry to craft high-quality, modern, and responsive websites and apps.<br>
+        <span style="color:#8f00ff;">Let me cast a spell on your next project!</span>
+      </div>
+      <div class="socials">
+        <a href="https://github.com/php-wiz" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://t.me/phpwiz" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+        <a href="mailto:phpwiz@example.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+        <a href="https://linkedin.com/in/phpwiz" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      </div>
+      <div class="actions">
+        <a href="https://github.com/php-wiz" class="action-btn follow" target="_blank" rel="noopener">Follow</a>
+        <a href="https://t.me/phpwiz" class="action-btn" target="_blank" rel="noopener">Contact</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // Day/Night toggle
+    const toggle = document.getElementById('toggleMode');
+    const body = document.body;
+    let isNight = true;
+    toggle.addEventListener('click', () => {
+      isNight = !isNight;
+      if (isNight) {
+        body.classList.remove('day');
+        body.classList.add('night');
+        toggle.querySelector('i').className = 'fa-solid fa-moon';
+        toggle.querySelector('span').textContent = 'Night';
+      } else {
+        body.classList.remove('night');
+        body.classList.add('day');
+        toggle.querySelector('i').className = 'fa-solid fa-sun';
+        toggle.querySelector('span').textContent = 'Day';
+      }
+    });
+
+    // Animated cyberspace/magic background (unchanged)
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let particles = [];
+    let mouse = { x: width/2, y: height/2 };
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: 2 + Math.random() * 3,
+          dx: (Math.random() - 0.5) * 1.5,
+          dy: (Math.random() - 0.5) * 1.5,
+          color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+          glow: Math.random() * 20 + 10
+        });
+      }
+    }
+    createParticles();
+
+    function drawMagicLines() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          let dx = particles[i].x - particles[j].x;
+          let dy = particles[i].y - particles[j].y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.save();
+            ctx.globalAlpha = 0.18;
+            ctx.strokeStyle = '#00f0ff';
+            ctx.shadowColor = '#8f00ff';
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+    }
+
+    function drawParticles() {
+      for (let p of particles) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = "#00f0ff";
+        ctx.shadowBlur = p.glow;
+        ctx.globalAlpha = 0.85;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function updateParticles() {
+      for (let p of particles) {
+        p.x += p.dx;
+        p.y += p.dy;
+        // Bounce off edges
+        if (p.x < 0 || p.x > width) p.dx *= -1;
+        if (p.y < 0 || p.y > height) p.dy *= -1;
+        // Magic attraction to mouse/finger
+        let dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+        if (dist < 140) {
+          p.dx += (p.x - mouse.x) / 1200;
+          p.dy += (p.y - mouse.y) / 1200;
+        }
+        // Limit speed
+        p.dx = Math.max(Math.min(p.dx, 2), -2);
+        p.dy = Math.max(Math.min(p.dy, 2), -2);
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      drawMagicLines();
+      drawParticles();
+      updateParticles();
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    function handleMove(e) {
+      if (e.touches && e.touches.length) {
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY;
+      } else {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      }
+    }
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('touchmove', handleMove);
+
+    // Recreate particles on resize for responsiveness
+    window.addEventListener('resize', createParticles);
+  </script>
+</body>
+</html>
