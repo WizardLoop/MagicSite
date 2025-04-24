@@ -1,1 +1,15 @@
 # phpwiz
+
+# 🧙‍♂️ phpwiz's Web Alchemical Lab 🧪
+**A carefully crafted web potion, brewed with PHP and front-end wizardry.** ✨
+
+## Description
+
+Follow these steps to conjure your own instance of this website:
+
+1.  **Clone the Repository:**
+
+    ```bash
+    git clone git@github.com:php-wiz/[phpwiz].git
+    cd [phpwiz]
+    
