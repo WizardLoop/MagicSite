@@ -659,13 +659,9 @@
   
   const mainPage = document.getElementById('mainPage');
   const aboutPage = document.getElementById('aboutPage');
-  const marketPage = document.getElementById('marketPage');
-  const accountPage = document.getElementById('accountPage');
   const donatePage = document.getElementById('donatePage');
   const navMain = document.getElementById('navMain');
   const navAbout = document.getElementById('navAbout');
-  const navMarket = document.getElementById('navMarket');
-  const navAccount = document.getElementById('navAccount');
   const navDonate = document.getElementById('navDonate');
   function showPage(page) {
     mainPage.style.display = page === 'main' ? '' : 'none';
@@ -675,14 +671,10 @@
     donatePage.style.display = page === 'donate' ? '' : 'none';
     navMain.classList.toggle('active', page === 'main');
     navAbout.classList.toggle('active', page === 'about');
-    navMarket.classList.toggle('active', page === 'market');
-    navAccount.classList.toggle('active', page === 'account');
     navDonate.classList.toggle('active', page === 'donate');
   }
   navMain.addEventListener('click', () => showPage('main'));
   navAbout.addEventListener('click', () => showPage('about'));
-  navMarket.addEventListener('click', () => showPage('market'));
-  navAccount.addEventListener('click', () => showPage('account'));
   navDonate.addEventListener('click', () => showPage('donate'));
     </script>
 </body>
