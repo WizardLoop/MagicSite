@@ -1,7 +1,7 @@
 # WizardLoop
 
 # 🧙‍♂️ WizardLoop's Web Alchemical Lab 🧪
-**A carefully crafted web potion, brewed with PHP and front-end wizardry.** ✨
+**A carefully crafted web potion.** ✨
 
 ## Description
 
