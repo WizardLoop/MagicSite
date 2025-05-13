@@ -3,585 +3,270 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Master of PHP spells!</title>
+  <title>Wizard Loop - Where Code Meets Magic</title>
   <meta property="og:image" content="https://avatars.githubusercontent.com/WizardLoop">
-  <link href="https://fonts.googleapis.com/css?family=Orbitron:700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Orbitron:700|Poppins:400,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
+    :root {
+      --primary: #7209b7;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --glow: #00f0ff;
+      --text: #fff;
+      --bg: #0a0a1a;
+      --bg-light: #f8fafc;
+      --text-dark: #1a1a2e;
+    }
     html, body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      width: 100vw;
-      overflow-x: hidden;
-      font-family: 'Orbitron', Arial, sans-serif;
-      background: transparent;
-      color: #fff;
+      scroll-behavior: smooth;
       transition: background 0.5s, color 0.5s;
     }
-    body {
-      background: linear-gradient(135deg, #3a0ca3 0%, #7209b7 50%, #4361ee 100%);
-      position: relative;
+    body.light {
+      background: var(--bg-light);
+      color: var(--text-dark);
+    }
+    /* HERO */
+    .hero {
       min-height: 100vh;
-      transition: background 0.5s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 0 2rem;
+      background: radial-gradient(circle at center, rgba(58, 12, 163, 0.2) 0%, rgba(10, 10, 26, 0.8) 100%);
     }
-    body.night {
-      background: linear-gradient(135deg, #240046 0%, #5f0a87 100%);
-      color: #fff;
-    }
-    body.day {
-      background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
-      color: #222;
-    }
-    #bg-canvas {
+    .magic-particles {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       pointer-events: none;
-    }
-    .card-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       z-index: 1;
+    }
+    .hero-inner {
+      z-index: 2;
       position: relative;
-    }
-    .profile-card {
-      background: linear-gradient(180deg, #7209b7 0 50%, #3a0ca3 50% 100%);
-      color: #fff;
-      border-radius: 18px;
-      box-shadow: 0 0 32px #00f0ff66, 0 0 0 6px #f7258544;
-      max-width: 290px;
-      width: 100%;
-      min-height: 320px;
-      padding: 0 0 1.5rem 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      margin: 0 8px;
-      transition: background 0.5s, color 0.5s, box-shadow 0.5s;
-    }
-    body.day .profile-card {
-      background: linear-gradient(180deg, #f8fafc 0 50%, #fff 50% 100%);
-      color: #222;
-      box-shadow: 0 0 32px #8f00ff22;
-    }
-    .profile-card .card-header {
-      background: transparent;
-      padding: 1.5rem 0 0.7rem 0;
-      border-radius: 0 0 40% 40%/0 0 80% 80%;
-      position: relative;
-    }
-    .profile-card .avatar {
-      width: 70px;
-      height: 70px;
-      border-radius: 18px;
-      border: 3px solid #fff;
-      box-shadow: 0 0 0 4px #f72585, 0 0 16px #00f0ff;
-      object-fit: cover;
-      margin-bottom: 0.5rem;
-      background: #fff;
-      transition: box-shadow 0.3s;
-    }
-    .profile-card .name {
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin-bottom: 0.15rem;
-      letter-spacing: 0.08em;
-      color: #f72585;
-      text-shadow: 0 0 8px #7209b755;
-    }
-    .profile-card .username {
-      font-size: 0.98rem;
-      color: #fff8;
-      margin-bottom: 0.7rem;
-      font-style: italic;
-    }
-    .profile-card .about-section {
-      margin: 0 0.7rem 0.7rem 0.7rem;
-      padding: 0.7rem 0 0.3rem 0;
-      border-top: 1px solid #fff2;
-      font-size: 0.98rem;
-      color: #e0e0ff;
-      text-shadow: 0 0 8px #3a0ca355;
-    }
-    body.day .profile-card .about-section {
-      color: #444;
-      text-shadow: none;
-      border-top: 1px solid #ccc;
-    }
-    .profile-card .skills {
-      margin: 0.5rem 0 0.7rem 0;
-      font-size: 0.95rem;
-      color: #fff;
-      letter-spacing: 0.04em;
-    }
-    body.day .profile-card .skills {
-      color: #8f00ff;
-    }
-    .profile-card .skills span {
-      background: linear-gradient(90deg, #00f0ff 0%, #f72585 100%);
-      color: #fff;
-      border-radius: 8px;
-      padding: 2px 8px;
-      margin: 0 2px;
-      font-weight: 600;
-      box-shadow: 0 0 8px #00f0ff44;
-      font-size: 0.93rem;
-      display: inline-block;
-    }
-    .profile-card .socials {
       display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 0.8rem;
-      margin-top: 0.3rem;
+      width: 100%;
+      margin-top: 3rem;
     }
-    .profile-card .socials a {
-      color: #fff;
-      background: linear-gradient(135deg, #00f0ff 0%, #f72585 100%);
-      border-radius: 12px;
-      width: 32px;
-      height: 32px;
+    .hero-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      box-shadow: 0 0 24px var(--glow), 0 0 0 4px #fff2;
+      background: #fff;
+      object-fit: cover;
+      border: 3px solid #fff;
+      margin-bottom: 1.2rem;
+      transition: box-shadow 0.3s;
+      animation: float 5s ease-in-out infinite;
+    }
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.7rem;
+      margin-bottom: 0.7rem;
+      background: linear-gradient(135deg, var(--glow), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+      text-align: center;
+    }
+    .hero-slogan {
+      font-size: 1.25rem;
+      color: var(--accent);
+      min-height: 2.2em;
+      margin-bottom: 1.7rem;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      height: 2.2em;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+    }
+    .typewriter {
+      display: inline-block;
+      border-right: 2px solid var(--glow);
+      white-space: nowrap;
+      overflow: hidden;
+      animation: blink-caret 0.8s step-end infinite;
+      font-family: 'Orbitron', sans-serif;
+    }
+    @keyframes blink-caret {
+      0%, 100% { border-color: var(--glow); }
+      50% { border-color: transparent; }
+    }
+    .hero-socials {
+      display: flex;
+      gap: 1.1rem;
+      margin-bottom: 2.2rem;
+      justify-content: center;
+    }
+    .hero-socials a {
+      color: var(--glow);
+      background: #fff1;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
       transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
-      box-shadow: 0 0 8px #00f0ff44;
+      box-shadow: 0 0 8px var(--glow)44;
       text-decoration: none;
       border: 2px solid #fff2;
     }
-    .profile-card .socials a:hover {
-      background: linear-gradient(135deg, #f72585 0%, #00f0ff 100%);
+    .hero-socials a:hover {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--glow) 100%);
       color: #fff;
-      box-shadow: 0 0 16px #f7258599;
+      box-shadow: 0 0 16px var(--accent)99;
       transform: scale(1.12) rotate(-6deg);
       border: 2px solid #fff;
     }
-    .profile-card .actions {
-      display: flex;
-      justify-content: center;
-      gap: 0.7rem;
-      margin-top: 0.7rem;
-    }
-    .profile-card .action-btn {
-      background: linear-gradient(90deg, #00f0ff 0%, #f72585 100%);
-      border: none;
-      color: #fff;
-      border-radius: 18px;
-      padding: 0.5rem 1.1rem;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
-      outline: none;
-      text-decoration: none;
-      box-shadow: 0 0 8px #00f0ff44;
-      letter-spacing: 0.03em;
-      position: relative;
-      overflow: hidden;
-    }
-    .profile-card .action-btn.follow {
-      background: linear-gradient(90deg, #f72585 0%, #00f0ff 100%);
-      color: #fff;
-      border: none;
-    }
-    .profile-card .action-btn:hover, .profile-card .action-btn:focus {
-      background: linear-gradient(90deg, #7209b7 0%, #00f0ff 100%);
-      color: #fff;
-      box-shadow: 0 0 16px #f7258599;
-      transform: scale(1.07);
-    }
-    /* Day/Night Toggle */
-    .toggle-switch {
-      position: fixed;
-      top: 22px;
-      left: 22px;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(30,30,40,0.7);
-      border-radius: 20px;
-      padding: 0.2rem 0.7rem 0.2rem 0.4rem;
-      box-shadow: 0 0 12px #00f0ff44;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.3s;
-    }
-    body.day .toggle-switch {
-      background: #e0e7ef;
-      box-shadow: 0 0 12px #8f00ff22;
-    }
-    .toggle-switch i {
-      font-size: 1.3rem;
-      color: #ff2e63;
-      transition: color 0.3s;
-    }
-    body.day .toggle-switch i {
-      color: #8f00ff;
-    }
-    .toggle-switch span {
-      font-size: 1.01rem;
-      color: #fff;
-      font-weight: bold;
-      transition: color 0.3s;
-    }
-    body.day .toggle-switch span {
-      color: #8f00ff;
-    }
-    @media (max-width: 600px) {
-      .card-container {
-        min-height: 90vh;
+    @media (max-width: 700px) {
+      .hero-title {
+        font-size: 1.7rem;
       }
-      .profile-card {
-        max-width: 96vw;
-        min-height: 240px;
-        padding: 0 0 0.7rem 0;
-        border-radius: 14px;
+      .hero-avatar {
+        width: 60px;
+        height: 60px;
       }
-      .profile-card .card-header {
-        padding: 0.7rem 0 0.4rem 0;
-      }
-      .profile-card .avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 10px;
-      }
-      .profile-card .name {
+      .hero-slogan {
         font-size: 1.05rem;
       }
-      .profile-card .about-section {
-        font-size: 0.91rem;
-        margin: 0 0.3rem 0.5rem 0.3rem;
+      .hero-socials a {
+        width: 34px;
+        height: 34px;
+        font-size: 1.05rem;
       }
-      .profile-card .skills span {
-        font-size: 0.85rem;
-        padding: 1px 6px;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
-      .profile-card .action-btn {
-        font-size: 0.93rem;
-        padding: 0.4rem 0.7rem;
-        border-radius: 12px;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      .profile-card .socials a {
-        width: 26px;
-        height: 26px;
-        font-size: 0.98rem;
-        border-radius: 8px;
-      }
+    }
+    .floating-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      z-index: 200;
+      background: #222;
+      color: var(--glow);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px #00f0ff44;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .floating-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 16px var(--accent)99;
+    }
+    body.light .floating-toggle {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 2px 12px #8f00ff22;
     }
   </style>
 </head>
-<body class="night" oncontextmenu="return false;">
-  <div class="toggle-switch" id="toggleMode" title="Switch day/night mode">
-    <i class="fa-solid fa-moon"></i>
-    <span>Night</span>
-  </div>
-  <canvas id="bg-canvas"></canvas>
-  <div class="card-container" id="mainPage">
-    <div class="profile-card">
-      <div class="card-header">
-        <img src="https://avatars.githubusercontent.com/WizardLoop" alt="Wizard Avatar" class="avatar" />
-        <div class="name">WizardLoop</div>
-        <div class="username">@WizardLoop</div>
-      </div>
-      <div class="about-section">
-        Backend Developer<br>
-        My code blends creativity and technical wizardry.<br>
-        <span style="color:#8f00ff;">Let me cast a spell on your next project!</span>
-      </div>
-      <div class="socials">
+<body>
+  <div class="magic-particles" id="particles"></div>
+  <button class="theme-toggle floating-toggle" id="themeToggle" title="Switch day/night mode"><i class="fa-solid fa-moon"></i></button>
+  <section class="hero" id="home">
+    <div class="hero-inner">
+      <img src="https://avatars.githubusercontent.com/WizardLoop" alt="Wizard Loop" class="hero-avatar">
+      <h1 class="hero-title">Wizard Loop</h1>
+      <div class="hero-slogan"><span class="typewriter" id="typewriter"></span></div>
+      <div class="hero-socials">
         <a href="https://github.com/WizardLoop" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
         <a href="https://t.me/WizardLoop" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
-        <a href="mailto:WizardLoop@example.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+        <a href="mailto:WizardLoop@WizardLoop.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
         <a href="https://linkedin.com/in/WizardLoop" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
       </div>
-      <div class="actions">
-        <a href="https://github.com/WizardLoop" class="action-btn follow" target="_blank" rel="noopener">Follow</a>
-        <a href="https://t.me/WizardLoop" class="action-btn" target="_blank" rel="noopener">Contact</a>
-      </div>
     </div>
-    <!-- magic-echo removed -->
-  </div>
-  <div class="card-container" id="aboutPage" style="display:none;">
-    <div class="profile-card">
-      <div class="card-header">
-        <img src="https://avatars.githubusercontent.com/WizardLoop" alt="Wizard Avatar" class="avatar" />
-        <div class="name">About Us</div>
-      </div>
-      <div class="about-section">
-        Welcome to WizardLoop!<br>
-        We are passionate backend developers conjuring up magical web solutions.<br>
-        Our expertise: PHP, JavaScript, modern web, and app development.<br>
-        <span style="color:#8f00ff;">Let's build something amazing together!</span>
-      </div>
-      <div class="socials">
-        <a href="https://github.com/WizardLoop" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-        <a href="https://t.me/WizardLoop" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
-        <a href="mailto:WizardLoop@example.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
-        <a href="https://linkedin.com/in/WizardLoop" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-      </div>
-      <div class="actions">
-        <a href="https://github.com/WizardLoop" class="action-btn follow" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://t.me/WizardLoop" class="action-btn" target="_blank" rel="noopener">Telegram</a>
-      </div>
-    </div>
-  </div>
-  <div class="card-container" id="marketPage" style="display:none;">
-    <div class="profile-card">
-      <div class="card-header">
-        <img src="https://avatars.githubusercontent.com/WizardLoop" alt="Wizard Avatar" class="avatar" />
-        <div class="name">Market</div>
-      </div>
-      <div class="about-section">
-        <span style="color:#8f00ff; font-size:1.1em;">You have arrived at our store, coming soon!</span>
-      </div>
-    </div>
-  </div>
-  <div class="card-container" id="accountPage" style="display:none;">
-    <div class="profile-card">
-      <div class="card-header">
-        <img src="https://avatars.githubusercontent.com/WizardLoop" alt="Wizard Avatar" class="avatar" />
-        <div class="name">My Account</div>
-      </div>
-      <div class="about-section">
-        <span style="color:#8f00ff;">Account features coming soon!</span>
-      </div>
-    </div>
-  </div>
-  <div class="card-container" id="donatePage" style="display:none;">
-    <div class="profile-card">
-      <div class="card-header">
-        <img src="https://avatars.githubusercontent.com/WizardLoop" alt="Wizard Avatar" class="avatar" />
-        <div class="name">Donate</div>
-      </div>
-      <div class="about-section">
-        <span style="color:#8f00ff;">Support us with a donation!<br>Thank you for your magic!</span>
-        <div class="donate-links">
-          <a href="https://t.me/wizardloop" target="_blank" class="donate-btn telegram"><i class="fab fa-telegram"></i> Telegram</a>
-          <a href="https://ko-fi.com/WizardLoop" target="_blank" class="donate-btn kofi"><i class="fa-solid fa-mug-hot"></i> Ko-fi</a>
-          <a href="https://paypal.me/WizardLoop" target="_blank" class="donate-btn paypal"><i class="fab fa-paypal"></i> PayPal</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <nav class="bottom-nav">
-    <button class="nav-btn active" id="navMain">
-      <i class="fa-solid fa-house"></i>
-      <span>Main</span>
-    </button>
-    <button class="nav-btn" id="navAbout">
-      <i class="fa-solid fa-user-group"></i>
-      <span>About</span>
-    </button>
-    <button class="nav-btn" id="navDonate">
-      <i class="fa-solid fa-heart"></i>
-      <span>Donate</span>
-    </button>
-  </nav>
-  <style>
-    .magic-echo {
-      margin-top: 18px;
-      text-align: center;
-      font-family: 'Orbitron', Arial, sans-serif;
-      font-size: 1.13rem;
-      color: #f72585;
-      font-weight: bold;
-      letter-spacing: 0.04em;
-      text-shadow: 0 0 8px #7209b755;
-    }
-    .magic-echo span {
-      color: #f72585;
-    }
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100vw;
-      height: 62px;
-      background: linear-gradient(90deg, #3a0ca3 0%, #7209b7 100%);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 20;
-      box-shadow: 0 -2px 16px #00f0ff44;
-      border-radius: 18px 18px 0 0;
-      padding-bottom: env(safe-area-inset-bottom, 0);
-    }
-    .bottom-nav .nav-btn {
-      background: none;
-      border: none;
-      color: #fff;
-      font: inherit;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex: 1 1 0;
-      padding: 0.2rem 0 0.1rem 0;
-      cursor: pointer;
-      transition: color 0.2s;
-      outline: none;
-      border-radius: 12px;
-      height: 100%;
-      gap: 2px;
-    }
-    .bottom-nav .nav-btn.active,
-    .bottom-nav .nav-btn:focus {
-      color: #00f0ff;
-      background: linear-gradient(90deg, #f72585 0%, #00f0ff 100%);
-      box-shadow: 0 0 8px #00f0ff44;
-    }
-    .bottom-nav .nav-btn i {
-      font-size: 1.3rem;
-      margin-bottom: 2px;
-    }
-    .bottom-nav .nav-btn span {
-      font-size: 0.93rem;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    @media (max-width: 600px) {
-      .bottom-nav {
-        height: 56px;
-        border-radius: 14px 14px 0 0;
-      }
-      .bottom-nav .nav-btn i {
-        font-size: 1.1rem;
-      }
-      .bottom-nav .nav-btn span {
-        font-size: 0.85rem;
-      }
-      .card-container {
-        min-height: calc(90vh - 56px);
-        margin-bottom: 56px;
-      }
-    }
-    @media (min-width: 601px) {
-      .bottom-nav {
-        max-width: 500px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-    }
-  </style>
-  <style>
-    .donate-links {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      margin-top: 1.2rem;
-      align-items: center;
-    }
-    .donate-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5em;
-      font-size: 1.05rem;
-      font-weight: bold;
-      border-radius: 14px;
-      padding: 0.5em 1.2em;
-      text-decoration: none;
-      color: #fff;
-      background: linear-gradient(90deg, #00f0ff 0%, #f72585 100%);
-      box-shadow: 0 0 8px #00f0ff44;
-      transition: background 0.2s, transform 0.2s;
-      border: none;
-    }
-    .donate-btn.telegram {
-      background: linear-gradient(90deg, #229ED9 0%, #00f0ff 100%);
-    }
-    .donate-btn.kofi {
-      background: linear-gradient(90deg, #29abe0 0%, #f72585 100%);
-    }
-    .donate-btn.paypal {
-      background: linear-gradient(90deg, #003087 0%, #00f0ff 100%);
-    }
-    .donate-btn:hover, .donate-btn:focus {
-      transform: scale(1.07);
-      box-shadow: 0 0 16px #f7258599;
-      color: #fff;
-      text-decoration: none;
-    }
-  }
-  </style>
+  </section>
   <script>
-    // Disable right-click context menu
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-
-    // Day/Night toggle
-    const toggle = document.getElementById('toggleMode');
-    const body = document.body;
-    let isNight = true;
-    toggle.addEventListener('click', () => {
-      isNight = !isNight;
-      if (isNight) {
-        body.classList.remove('day');
-        body.classList.add('night');
-        toggle.querySelector('i').className = 'fa-solid fa-moon';
-        toggle.querySelector('span').textContent = 'Night';
-      } else {
-        body.classList.remove('night');
-        body.classList.add('day');
-        toggle.querySelector('i').className = 'fa-solid fa-sun';
-        toggle.querySelector('span').textContent = 'Day';
-      }
-    });
-
-    // Animated cyberspace/magic background (unchanged)
-    const canvas = document.getElementById('bg-canvas');
+    // Particle animation
+    const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
+    const particlesContainer = document.getElementById('particles');
+    particlesContainer.appendChild(canvas);
     let width = window.innerWidth;
     let height = window.innerHeight;
     let particles = [];
-    let mouse = { x: width/2, y: height/2 };
-
     function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
     }
-    window.addEventListener('resize', resize);
-    resize();
-
     function createParticles() {
       particles = [];
-      for (let i = 0; i < 60; i++) {
+      for (let i = 0; i < 50; i++) {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
           r: 2 + Math.random() * 3,
-          dx: (Math.random() - 0.5) * 1.5,
-          dy: (Math.random() - 0.5) * 1.5,
+          dx: (Math.random() - 0.5) * 1,
+          dy: (Math.random() - 0.5) * 1,
           color: `hsl(${Math.random() * 360}, 80%, 60%)`,
           glow: Math.random() * 20 + 10
         });
       }
     }
-    createParticles();
-
-    function drawMagicLines() {
+    function drawParticles() {
+      ctx.clearRect(0, 0, width, height);
+      for (let p of particles) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = "#00f0ff";
+        ctx.shadowBlur = p.glow;
+        ctx.globalAlpha = 0.6;
+        ctx.fill();
+        ctx.restore();
+      }
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           let dx = particles[i].x - particles[j].x;
           let dy = particles[i].y - particles[j].y;
           let dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
+          if (dist < 150) {
             ctx.save();
-            ctx.globalAlpha = 0.18;
-            ctx.strokeStyle = '#00f0ff';
-            ctx.shadowColor = '#8f00ff';
-            ctx.shadowBlur = 8;
             ctx.beginPath();
+            ctx.strokeStyle = `rgba(0, 240, 255, ${0.2 * (1 - dist/150)})`;
+            ctx.lineWidth = 1;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
@@ -590,90 +275,70 @@
         }
       }
     }
-
-    function drawParticles() {
-      for (let p of particles) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
-        ctx.fillStyle = p.color;
-        ctx.shadowColor = "#00f0ff";
-        ctx.shadowBlur = p.glow;
-        ctx.globalAlpha = 0.85;
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
     function updateParticles() {
       for (let p of particles) {
         p.x += p.dx;
         p.y += p.dy;
-        // Bounce off edges
         if (p.x < 0 || p.x > width) p.dx *= -1;
         if (p.y < 0 || p.y > height) p.dy *= -1;
-        // Magic attraction to mouse/finger
-        let dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
-        if (dist < 140) {
-          p.dx += (p.x - mouse.x) / 1200;
-          p.dy += (p.y - mouse.y) / 1200;
-        }
-        // Limit speed
-        p.dx = Math.max(Math.min(p.dx, 2), -2);
-        p.dy = Math.max(Math.min(p.dy, 2), -2);
       }
     }
-
     function animate() {
-      ctx.clearRect(0, 0, width, height);
-      drawMagicLines();
       drawParticles();
       updateParticles();
       requestAnimationFrame(animate);
     }
+    window.addEventListener('resize', () => {
+      resize();
+      createParticles();
+    });
+    resize();
+    createParticles();
     animate();
-
-    function handleMove(e) {
-      if (e.touches && e.touches.length) {
-        mouse.x = e.touches[0].clientX;
-        mouse.y = e.touches[0].clientY;
+    // Day/Night mode toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      const icon = themeToggle.querySelector('i');
+      if (document.body.classList.contains('light')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
       } else {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
+    });
+    // Typewriter effect for slogan
+    const slogans = [
+      "Unleash the magic of code.",
+      "Enchanting digital experiences.",
+      "Where creativity meets wizardry.",
+      "Transforming ideas into reality."
+    ];
+    let twIndex = 0, charIndex = 0, isDeleting = false;
+    const twElem = document.getElementById('typewriter');
+    function typeWriter() {
+      const current = slogans[twIndex];
+      if (isDeleting) {
+        twElem.textContent = current.substring(0, charIndex--);
+        if (charIndex < 0) {
+          isDeleting = false;
+          twIndex = (twIndex + 1) % slogans.length;
+          setTimeout(typeWriter, 700);
+        } else {
+          setTimeout(typeWriter, 40);
+        }
+      } else {
+        twElem.textContent = current.substring(0, charIndex++);
+        if (charIndex > current.length) {
+          isDeleting = true;
+          setTimeout(typeWriter, 1200);
+        } else {
+          setTimeout(typeWriter, 80);
+        }
       }
     }
-    window.addEventListener('mousemove', handleMove);
-    window.addEventListener('touchmove', handleMove);
-
-    // Recreate particles on resize for responsiveness
-    window.addEventListener('resize', createParticles);
-
-  
-  const mainPage = document.getElementById('mainPage');
-  const aboutPage = document.getElementById('aboutPage');
-  const marketPage = document.getElementById('marketPage');
-  const accountPage = document.getElementById('accountPage');
-  const donatePage = document.getElementById('donatePage');
-  const navMain = document.getElementById('navMain');
-  const navAbout = document.getElementById('navAbout');
-  const navMarket = document.getElementById('navMarket');
-  const navAccount = document.getElementById('navAccount');
-  const navDonate = document.getElementById('navDonate');
-  function showPage(page) {
-    mainPage.style.display = page === 'main' ? '' : 'none';
-    aboutPage.style.display = page === 'about' ? '' : 'none';
-    marketPage.style.display = page === 'market' ? '' : 'none';
-    accountPage.style.display = page === 'account' ? '' : 'none';
-    donatePage.style.display = page === 'donate' ? '' : 'none';
-    navMain.classList.toggle('active', page === 'main');
-    navAbout.classList.toggle('active', page === 'about');
-    navMarket.classList.toggle('active', page === 'market');
-    navAccount.classList.toggle('active', page === 'account');
-    navDonate.classList.toggle('active', page === 'donate');
-  }
-  navMain.addEventListener('click', () => showPage('main'));
-  navAbout.addEventListener('click', () => showPage('about'));
-  navDonate.addEventListener('click', () => showPage('donate'));
-    </script>
+    typeWriter();
+  </script>
 </body>
 </html>
