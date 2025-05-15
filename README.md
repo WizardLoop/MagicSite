@@ -12,4 +12,3 @@ Follow these steps to conjure your own instance of this website:
     ```bash
     git clone git@github.com:php-wiz/[WizardLoop].git
     cd [WizardLoop]
-    
