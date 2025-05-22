@@ -1,5 +1,3 @@
-# WizardLoop
-
 # 🧙‍♂️ WizardLoop's Web Alchemical Lab 🧪
 **A carefully crafted web potion.** ✨
 
